@@ -1,3 +1,5 @@
+import { mockBitcoinData, mockChartData } from "./mockData.js";
+
 //API Call
 async function getBitcoin() {
   const corsProxy = "https://cors-anywhere.herokuapp.com/";
@@ -16,10 +18,50 @@ async function getBitcoin() {
     console.error("Oops! Something went wrong..", error.message);
   }
 }
+//API - Bitcoin 30 Day Chart Data
+async function getBitcoinHistory() {
+  const corsProxy = "https://cors-anywhere.herokuapp.com/";
+  const apiUrl =
+    "https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=usd&days=30";
+  const url = corsProxy + apiUrl;
+  try {
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(`Response status: ${response.status}`);
+    }
+    const json = await response.json();
+    console.log("Api Data Received... Bitcoin");
+    const bitcoinDays = json; // Access the response data directly
+    console.log(bitcoinDays);
+    return bitcoinDays;
+  } catch (error) {
+    console.error("Oops! Something went wrong..", error.message);
+  }
+}
+
+//process chart data
+function processChartData(bitcoinDays) {
+  const labels = bitcoinDays.prices.map((dataPoint) => {
+    return new Date(dataPoint[0]).toLocaleDateString();
+  });
+  //Extract price values
+  const priceData = bitcoinDays.prices.map((dataPoint) => dataPoint[1]);
+  return { labels, priceData };
+}
+
 //page load create user
 document.addEventListener("DOMContentLoaded", () => {
-  loadNewData();
+  loadNewData(), getBitcoinHistory();
 });
+
+//Load API Non-Production Method
+// function loadAPI() {
+//   loadNewData(), getBitcoinHistory();
+// }
+
+// // Make functions available globally for inline event handlers
+// window.loadAPI = loadAPI;
+// window.loadNewData = loadNewData;
 
 //Load New Data
 function loadNewData() {
@@ -30,6 +72,10 @@ function loadNewData() {
       console.log("API data loaded successfully:", apiData);
     } else {
       console.error("No API data received");
+      // Use mock data as fallback
+      displayData(mockBitcoinData);
+      priceChart();
+      console.log("Using mock data as fallback");
     }
   });
 }
@@ -58,27 +104,167 @@ function displayData(apiData) {
 }
 
 //Price Chart
+// Pseudocode for updating chart
 function priceChart() {
-  const ctx = document.getElementById("price-chart");
+  // Get Bitcoin history data
+  getBitcoinHistory().then((bitcoinDays) => {
+    if (bitcoinDays) {
+      // Process the data
+      const { labels, priceData } = processChartData(bitcoinDays);
 
-  new Chart(ctx, {
-    type: "bar",
-    data: {
-      labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
-      datasets: [
-        {
-          label: "# of Votes",
-          data: [12, 19, 3, 5, 2, 3],
-          borderWidth: 1,
+      // Create chart with real data
+      const ctx = document.getElementById("price-chart");
+      new Chart(ctx, {
+        type: "line",
+        data: {
+          labels: labels,
+          datasets: [
+            {
+              label: "Bitcoin Price (USD)",
+              data: priceData,
+              borderColor: "#8b5cf6",
+              backgroundColor: "rgba(139, 92, 246, 0.1)",
+              borderWidth: 2,
+              pointRadius: 0,
+              pointHoverRadius: 5,
+              tension: 0.3,
+            },
+          ],
         },
-      ],
-    },
-    options: {
-      scales: {
-        y: {
-          beginAtZero: true,
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          interaction: {
+            mode: "index",
+            intersect: false,
+          },
+          plugins: {
+            tooltip: {
+              backgroundColor: "rgba(0, 0, 0, 0.7)",
+              padding: 10,
+              titleColor: "#fff",
+              bodyColor: "#fff",
+              titleFont: { size: 14 },
+              bodyFont: { size: 12 },
+              displayColors: false,
+              callbacks: {
+                label: function (context) {
+                  return `$${context.parsed.y.toFixed(2)}`;
+                },
+              },
+            },
+            legend: {
+              labels: {
+                color: "#fff",
+                font: { size: 14 },
+              },
+            },
+          },
+          scales: {
+            x: {
+              grid: {
+                color: "rgba(255, 255, 255, 0.05)",
+              },
+              ticks: {
+                color: "rgba(255, 255, 255, 0.7)",
+                maxRotation: 0,
+                autoSkip: true,
+                maxTicksLimit: 7,
+              },
+            },
+            y: {
+              grid: {
+                color: "rgba(255, 255, 255, 0.05)",
+              },
+              ticks: {
+                color: "rgba(255, 255, 255, 0.7)",
+                callback: function (value) {
+                  return "$" + value.toLocaleString();
+                },
+              },
+            },
+          },
         },
-      },
-    },
+      });
+    } else {
+      // Use mock data as fallback
+      console.log("No chart data received, using mock data");
+      const { labels, priceData } = processChartData(mockChartData);
+
+      // Create chart with mock data
+      const ctx = document.getElementById("price-chart");
+      new Chart(ctx, {
+        type: "line",
+        data: {
+          labels: labels,
+          datasets: [
+            {
+              label: "Bitcoin Price (USD) - Mock Data",
+              data: priceData,
+              borderColor: "#8b5cf6",
+              backgroundColor: "rgba(139, 92, 246, 0.1)",
+              borderWidth: 2,
+              pointRadius: 0,
+              pointHoverRadius: 5,
+              tension: 0.3,
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          interaction: {
+            mode: "index",
+            intersect: false,
+          },
+          plugins: {
+            tooltip: {
+              backgroundColor: "rgba(0, 0, 0, 0.7)",
+              padding: 10,
+              titleColor: "#fff",
+              bodyColor: "#fff",
+              titleFont: { size: 14 },
+              bodyFont: { size: 12 },
+              displayColors: false,
+              callbacks: {
+                label: function (context) {
+                  return `$${context.parsed.y.toFixed(2)}`;
+                },
+              },
+            },
+            legend: {
+              labels: {
+                color: "#fff",
+                font: { size: 14 },
+              },
+            },
+          },
+          scales: {
+            x: {
+              grid: {
+                color: "rgba(255, 255, 255, 0.05)",
+              },
+              ticks: {
+                color: "rgba(255, 255, 255, 0.7)",
+                maxRotation: 0,
+                autoSkip: true,
+                maxTicksLimit: 7,
+              },
+            },
+            y: {
+              grid: {
+                color: "rgba(255, 255, 255, 0.05)",
+              },
+              ticks: {
+                color: "rgba(255, 255, 255, 0.7)",
+                callback: function (value) {
+                  return "$" + value.toLocaleString();
+                },
+              },
+            },
+          },
+        },
+      });
+    }
   });
 }
