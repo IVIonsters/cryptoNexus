@@ -1,9 +1,3 @@
-/* - Crypto Charts
-    - fetching API data
-    - displaying on frontend
-    - separating your logic in functions
-    - dynamically displaying html elements with DOM */
-
 //API Call
 async function getBitcoin() {
   const corsProxy = "https://cors-anywhere.herokuapp.com/";
@@ -41,8 +35,23 @@ function loadNewData() {
 
 // Displaying Data
 function displayData(apiData) {
-  console.log(apiData.market_data.current_price.usd);
+  // Display current price
   document.getElementById(
     "current-price"
   ).textContent = `$${apiData.market_data.current_price.usd}`;
+
+  //display 24h change
+  document.getElementById(
+    "price-change"
+  ).textContent = `$${apiData.market_data.price_change_24h}`;
+
+  //Market Cap market_cap.usd
+  document.getElementById(
+    "market-cap"
+  ).textContent = `$${apiData.market_data.market_cap.usd}`;
+
+  //24h volume market_cap_change_24h
+  document.getElementById(
+    "volume"
+  ).textContent = `$${apiData.market_data.market_cap_change_24h}`;
 }
