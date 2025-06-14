@@ -2,7 +2,10 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
     <title>Crypto Chart</title>
     <link
       rel="stylesheet"
@@ -54,7 +57,7 @@
       <!-- Crypto Selection -->
       <div class="flex flex-wrap gap-2 mb-6">
         <button
-          onclick="getBitcoin()"
+          onclick="loadNewData()"
           class="px-4 py-2 bg-indigo-600 text-white rounded-md active"
         >
           Bitcoin
@@ -74,7 +77,10 @@
           class="bg-dark-card backdrop-blur-sm p-4 rounded-lg border border-gray-800 shadow-lg"
         >
           <h3 class="text-gray-400 text-sm">Current Price</h3>
-          <p class="text-2xl font-bold text-white" id="current-price">
+          <p
+            id="current-price"
+            class="text-2xl font-bold text-white"
+          >
             $29,342.58
           </p>
         </div>
@@ -83,7 +89,10 @@
           class="bg-dark-card backdrop-blur-sm p-4 rounded-lg border border-gray-800 shadow-lg"
         >
           <h3 class="text-gray-400 text-sm">24h Change</h3>
-          <p class="text-2xl font-bold text-green-500" id="price-change">
+          <p
+            class="text-2xl font-bold text-green-500"
+            id="price-change"
+          >
             +2.4%
           </p>
         </div>
@@ -92,14 +101,24 @@
           class="bg-dark-card backdrop-blur-sm p-4 rounded-lg border border-gray-800 shadow-lg"
         >
           <h3 class="text-gray-400 text-sm">Market Cap</h3>
-          <p class="text-2xl font-bold text-white" id="market-cap">$563.2B</p>
+          <p
+            class="text-2xl font-bold text-white"
+            id="market-cap"
+          >
+            $563.2B
+          </p>
         </div>
 
         <div
           class="bg-dark-card backdrop-blur-sm p-4 rounded-lg border border-gray-800 shadow-lg"
         >
           <h3 class="text-gray-400 text-sm">24h Volume</h3>
-          <p class="text-2xl font-bold text-white" id="volume">$32.1B</p>
+          <p
+            class="text-2xl font-bold text-white"
+            id="volume"
+          >
+            $32.1B
+          </p>
         </div>
       </div>
 
