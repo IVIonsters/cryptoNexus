@@ -26,6 +26,7 @@ function loadNewData() {
   getBitcoin().then((apiData) => {
     if (apiData) {
       displayData(apiData);
+      priceChart();
       console.log("API data loaded successfully:", apiData);
     } else {
       console.error("No API data received");
@@ -54,4 +55,30 @@ function displayData(apiData) {
   document.getElementById(
     "volume"
   ).textContent = `$${apiData.market_data.market_cap_change_24h}`;
+}
+
+//Price Chart
+function priceChart() {
+  const ctx = document.getElementById("price-chart");
+
+  new Chart(ctx, {
+    type: "bar",
+    data: {
+      labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
+      datasets: [
+        {
+          label: "# of Votes",
+          data: [12, 19, 3, 5, 2, 3],
+          borderWidth: 1,
+        },
+      ],
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true,
+        },
+      },
+    },
+  });
 }
