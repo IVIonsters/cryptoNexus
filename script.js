@@ -13,7 +13,6 @@ document.querySelector(".crypto-buttons").addEventListener("click", (e) => {
 async function getCrypto(cryptoId) {
   const corsProxy = "https://cors-anywhere.herokuapp.com/";
   const apiUrl = `https://api.coingecko.com/api/v3/coins/${cryptoId}`;
-  // const apiUrl = `https://api.coingecko.com/api/v3/coins/bitcoin`;
   const url = corsProxy + apiUrl;
   try {
     const response = await fetch(url);
@@ -32,7 +31,6 @@ async function getCrypto(cryptoId) {
 async function getCryptoHistory(cryptoId) {
   const corsProxy = "https://cors-anywhere.herokuapp.com/";
   const apiUrl = `https://api.coingecko.com/api/v3/coins/${cryptoId}/market_chart?vs_currency=usd&days=30`;
-  // const apiUrl = `https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=usd&days=30`;
   const url = corsProxy + apiUrl;
   try {
     const response = await fetch(url);
@@ -59,20 +57,6 @@ function processChartData(bitcoinDays) {
   return { labels, priceData };
 }
 
-//page load create user
-// document.addEventListener("DOMContentLoaded", () => {
-//   loadNewData(), getCryptoHistory();
-// });
-
-//Load API Non-Production Method
-function loadAPI() {
-  loadNewData(), getCryptoHistory();
-}
-
-// Make functions available globally for inline event handlers
-window.loadAPI = loadAPI;
-window.loadNewData = loadNewData;
-
 //Load New Data
 function loadNewData(cryptoId) {
   getCrypto(cryptoId).then((apiData) => {
@@ -92,25 +76,67 @@ function loadNewData(cryptoId) {
 
 // Displaying Data
 function displayData(apiData) {
+  const priceFormatter = new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+
   // Display current price
-  document.getElementById(
-    "current-price"
-  ).textContent = `$${apiData.market_data.current_price.usd}`;
+  document.getElementById("current-price").textContent = priceFormatter.format(
+    apiData.market_data.current_price.usd
+  );
 
   //display 24h change
-  document.getElementById(
-    "price-change"
-  ).textContent = `$${apiData.market_data.price_change_24h}`;
+  const priceChange = apiData.market_data.price_change_24h;
+  const priceChangeElement = document.getElementById("price-change");
+
+  if (priceChange > 0) {
+    priceChangeElement.textContent = `+${priceFormatter.format(priceChange)}`;
+    priceChangeElement.className = "text-2xl font-bold text-green-500";
+  } else {
+    priceChangeElement.textContent = priceFormatter.format(priceChange);
+    priceChangeElement.className = "text-2xl font-bold text-red-500";
+  }
 
   //Market Cap market_cap.usd
-  document.getElementById(
-    "market-cap"
-  ).textContent = `$${apiData.market_data.market_cap.usd}`;
+  const marketCap = apiData.market_data.market_cap.usd;
+  let formattedMarketCap;
+
+  if (marketCap >= 1e12) {
+    formattedMarketCap = `${(marketCap / 1e12).toFixed(1)}T`;
+  } else if (marketCap >= 1e9) {
+    formattedMarketCap = `${(marketCap / 1e9).toFixed(1)}B`;
+  } else if (marketCap >= 1e6) {
+    formattedMarketCap = `${(marketCap / 1e6).toFixed(1)}M`;
+  } else {
+    formattedMarketCap = formatter.format(marketCap);
+  }
+
+  document.getElementById("market-cap").textContent = formattedMarketCap;
 
   //24h volume market_cap_change_24h
+  const volume = apiData.market_data.total_volume.usd;
+  let formattedVolume;
+
+  if (volume >= 1e12) {
+    formattedVolume = `${(volume / 1e12).toFixed(1)}T`;
+  } else if (volume >= 1e9) {
+    formattedVolume = `${(volume / 1e9).toFixed(1)}B`;
+  } else if (volume >= 1e6) {
+    formattedVolume = `${(volume / 1e6).toFixed(1)}M`;
+  } else {
+    formattedVolume = formatter.format(volume);
+  }
+
+  document.getElementById("volume").textContent = formattedVolume;
+
+  // Update last updated time
+  const lastUpdated = new Date(apiData.last_updated);
   document.getElementById(
-    "volume"
-  ).textContent = `$${apiData.market_data.market_cap_change_24h}`;
+    "last-updated"
+  ).textContent = `Last updated: ${lastUpdated.toLocaleString()}`;
 }
 
 // Global variable to track the current chart instance
