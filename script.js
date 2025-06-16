@@ -1,9 +1,19 @@
 import { mockBitcoinData, mockChartData } from "./mockData.js";
 
+document.querySelector(".crypto-buttons").addEventListener("click", (e) => {
+  const button = e.target.closest("[data-crypto]");
+  if (button) {
+    const cryptoId = button.dataset.crypto;
+    console.log(cryptoId);
+    loadNewData(cryptoId);
+  }
+});
+
 //API Call
-async function getCrypto() {
+async function getCrypto(cryptoId) {
   const corsProxy = "https://cors-anywhere.herokuapp.com/";
-  const apiUrl = "https://api.coingecko.com/api/v3/coins/bitcoin";
+  const apiUrl = `https://api.coingecko.com/api/v3/coins/${cryptoId}`;
+  // const apiUrl = `https://api.coingecko.com/api/v3/coins/bitcoin`;
   const url = corsProxy + apiUrl;
   try {
     const response = await fetch(url);
@@ -11,7 +21,7 @@ async function getCrypto() {
       throw new Error(`Response status: ${response.status}`);
     }
     const json = await response.json();
-    console.log("Api Data Received... Bitcoin");
+    console.log(`Api Data Received...${cryptoId}`);
     const apiData = json;
     return apiData;
   } catch (error) {
@@ -19,10 +29,10 @@ async function getCrypto() {
   }
 }
 //API - Crypto 30 Day Chart Data
-async function getCryptoHistory() {
+async function getCryptoHistory(cryptoId) {
   const corsProxy = "https://cors-anywhere.herokuapp.com/";
-  const apiUrl =
-    "https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=usd&days=30";
+  const apiUrl = `https://api.coingecko.com/api/v3/coins/${cryptoId}/market_chart?vs_currency=usd&days=30`;
+  // const apiUrl = `https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=usd&days=30`;
   const url = corsProxy + apiUrl;
   try {
     const response = await fetch(url);
@@ -64,11 +74,11 @@ window.loadAPI = loadAPI;
 window.loadNewData = loadNewData;
 
 //Load New Data
-function loadNewData() {
-  getCrypto().then((apiData) => {
+function loadNewData(cryptoId) {
+  getCrypto(cryptoId).then((apiData) => {
     if (apiData) {
       displayData(apiData);
-      priceChart();
+      priceChart(cryptoId);
       console.log("API data loaded successfully:", apiData);
     } else {
       console.error("No API data received");
@@ -103,23 +113,36 @@ function displayData(apiData) {
   ).textContent = `$${apiData.market_data.market_cap_change_24h}`;
 }
 
+// Global variable to track the current chart instance
+let currentChart = null;
+
 //Price Chart
-function priceChart() {
+function priceChart(cryptoId) {
   // Get Bitcoin history data
-  getCryptoHistory().then((bitcoinDays) => {
+  getCryptoHistory(cryptoId).then((bitcoinDays) => {
+    // Destroy existing chart if it exists
+    if (currentChart) {
+      currentChart.destroy();
+    }
+
+    const ctx = document.getElementById("price-chart");
+
     if (bitcoinDays) {
       // Process the data
       const { labels, priceData } = processChartData(bitcoinDays);
 
       // Create chart with real data
-      const ctx = document.getElementById("price-chart");
-      new Chart(ctx, {
+      currentChart = new Chart(ctx, {
         type: "line",
         data: {
           labels: labels,
           datasets: [
             {
-              label: "Bitcoin Price (USD)",
+              label: `${
+                cryptoId
+                  ? cryptoId.charAt(0).toUpperCase() + cryptoId.slice(1)
+                  : "Bitcoin"
+              } Price (USD)`,
               data: priceData,
               borderColor: "#8b5cf6",
               backgroundColor: "rgba(139, 92, 246, 0.1)",
@@ -191,14 +214,17 @@ function priceChart() {
       const { labels, priceData } = processChartData(mockChartData);
 
       // Create chart with mock data
-      const ctx = document.getElementById("price-chart");
-      new Chart(ctx, {
+      currentChart = new Chart(ctx, {
         type: "line",
         data: {
           labels: labels,
           datasets: [
             {
-              label: "Bitcoin Price (USD) - Mock Data",
+              label: `${
+                cryptoId
+                  ? cryptoId.charAt(0).toUpperCase() + cryptoId.slice(1)
+                  : "Bitcoin"
+              } Price (USD) - Mock Data`,
               data: priceData,
               borderColor: "#8b5cf6",
               backgroundColor: "rgba(139, 92, 246, 0.1)",
