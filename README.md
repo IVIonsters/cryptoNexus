@@ -66,6 +66,10 @@ cryptoNexus/
 
 ## **Screenshots**
 
+| <img src="./images/Macbook-PRO-16-2021-127.0.0.1.png" width="600"> | <img src="./images/iPhone-16-PRO-MAX-127.0.0.1.png" width="300"> | <img src="./images/screencapture-127-0-0-1-5500-2025-06-13-10_50_10.png" width="600"> |
+| :----------------------------------------------------------------: | :--------------------------------------------------------------: | :-----------------------------------------------------------------------------------: |
+|                      Crypto Nexus on Desktop                       |                      Crypto Nexus on iPhone                      |                                     Crypto Nexus                                      |
+
 ## **Future Improvements**
 
 - Add support for more cryptocurrencies
