@@ -1,7 +1,7 @@
 import { mockBitcoinData, mockChartData } from "./mockData.js";
 
 //API Call
-async function getBitcoin() {
+async function getCrypto() {
   const corsProxy = "https://cors-anywhere.herokuapp.com/";
   const apiUrl = "https://api.coingecko.com/api/v3/coins/bitcoin";
   const url = corsProxy + apiUrl;
@@ -12,14 +12,14 @@ async function getBitcoin() {
     }
     const json = await response.json();
     console.log("Api Data Received... Bitcoin");
-    const apiData = json; // Access the response data directly
+    const apiData = json;
     return apiData;
   } catch (error) {
     console.error("Oops! Something went wrong..", error.message);
   }
 }
-//API - Bitcoin 30 Day Chart Data
-async function getBitcoinHistory() {
+//API - Crypto 30 Day Chart Data
+async function getCryptoHistory() {
   const corsProxy = "https://cors-anywhere.herokuapp.com/";
   const apiUrl =
     "https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=usd&days=30";
@@ -31,7 +31,7 @@ async function getBitcoinHistory() {
     }
     const json = await response.json();
     console.log("Api Data Received... Bitcoin");
-    const bitcoinDays = json; // Access the response data directly
+    const bitcoinDays = json;
     console.log(bitcoinDays);
     return bitcoinDays;
   } catch (error) {
@@ -50,22 +50,22 @@ function processChartData(bitcoinDays) {
 }
 
 //page load create user
-document.addEventListener("DOMContentLoaded", () => {
-  loadNewData(), getBitcoinHistory();
-});
+// document.addEventListener("DOMContentLoaded", () => {
+//   loadNewData(), getCryptoHistory();
+// });
 
 //Load API Non-Production Method
-// function loadAPI() {
-//   loadNewData(), getBitcoinHistory();
-// }
+function loadAPI() {
+  loadNewData(), getCryptoHistory();
+}
 
-// // Make functions available globally for inline event handlers
-// window.loadAPI = loadAPI;
-// window.loadNewData = loadNewData;
+// Make functions available globally for inline event handlers
+window.loadAPI = loadAPI;
+window.loadNewData = loadNewData;
 
 //Load New Data
 function loadNewData() {
-  getBitcoin().then((apiData) => {
+  getCrypto().then((apiData) => {
     if (apiData) {
       displayData(apiData);
       priceChart();
@@ -104,10 +104,9 @@ function displayData(apiData) {
 }
 
 //Price Chart
-// Pseudocode for updating chart
 function priceChart() {
   // Get Bitcoin history data
-  getBitcoinHistory().then((bitcoinDays) => {
+  getCryptoHistory().then((bitcoinDays) => {
     if (bitcoinDays) {
       // Process the data
       const { labels, priceData } = processChartData(bitcoinDays);
