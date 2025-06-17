@@ -1,6 +1,7 @@
 import CryptoSelect from "./cryptoSelect";
 import DataCards from "./dataCards";
 import Chart from "./chart";
+import Status from "./status";
 
 function mainContent() {
   return (
@@ -8,6 +9,7 @@ function mainContent() {
       <CryptoSelect />
       <DataCards />
       <Chart />
+      <Status />
     </main>
   );
 }
