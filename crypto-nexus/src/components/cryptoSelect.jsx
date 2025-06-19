@@ -1,43 +1,42 @@
-import { useState } from "react";
+import { useCrypto } from "../context/CryptoContext";
 
 function CryptoSelect() {
-  //Selected Crypto State
-  const [crypto, setCrypto] = useState("bitcoin");
-
-  // this will work for testing - but it's bugged have to double click to modify the current state, as it's not "overriding the original"
-  function handleChange(e) {
-    const button = e.target.closest("[data-crypto]");
-    if (button) {
-      const cryptoId = button.dataset.crypto;
-      setCrypto(cryptoId);
-      console.log(crypto);
-    }
-  }
+  const { selectedCrypto, setSelectedCrypto } = useCrypto();
 
   return (
-    <div className="crypto-buttons mb-6 flex flex-wrap gap-2">
-      <button
-        className="active rounded-md bg-indigo-600 px-4 py-2 text-white"
-        data-crypto="bitcoin"
-        onClick={handleChange}
-      >
-        Bitcoin
-      </button>
-      <button
-        className="rounded-md bg-gray-200 px-4 py-2 text-gray-800"
-        data-crypto="ethereum"
-        onClick={handleChange}
-      >
-        Ethereum
-      </button>
-      <button
-        className="rounded-md bg-gray-200 px-4 py-2 text-gray-800"
-        data-crypto="solana"
-        onClick={handleChange}
-      >
-        Solana
-      </button>
-      {/* <!-- Add more crypto buttons as needed --> */}
+    <div className="crypto-buttons-container mb-8">
+      <div className="flex space-x-4 overflow-x-auto pb-2">
+        <button
+          className={`rounded-md px-4 py-2 ${
+            selectedCrypto === "bitcoin"
+              ? "bg-indigo-600 text-white"
+              : "bg-gray-800 text-gray-300 hover:bg-gray-700"
+          }`}
+          onClick={() => setSelectedCrypto("bitcoin")}
+        >
+          Bitcoin
+        </button>
+        <button
+          className={`rounded-md px-4 py-2 ${
+            selectedCrypto === "ethereum"
+              ? "bg-indigo-600 text-white"
+              : "bg-gray-800 text-gray-300 hover:bg-gray-700"
+          }`}
+          onClick={() => setSelectedCrypto("ethereum")}
+        >
+          Ethereum
+        </button>
+        <button
+          className={`rounded-md px-4 py-2 ${
+            selectedCrypto === "solana"
+              ? "bg-indigo-600 text-white"
+              : "bg-gray-800 text-gray-300 hover:bg-gray-700"
+          }`}
+          onClick={() => setSelectedCrypto("solana")}
+        >
+          Solana
+        </button>
+      </div>
     </div>
   );
 }
