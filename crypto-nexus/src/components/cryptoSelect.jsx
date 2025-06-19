@@ -4,6 +4,7 @@ function CryptoSelect() {
   //Selected Crypto State
   const [crypto, setCrypto] = useState("bitcoin");
 
+  // this will work for testing - but it's bugged have to double click to modify the current state, as it's not "overriding the original"
   function handleChange(e) {
     const button = e.target.closest("[data-crypto]");
     if (button) {
