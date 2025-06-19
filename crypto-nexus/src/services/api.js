@@ -30,7 +30,7 @@ export async function getCryptoHistory(cryptoId) {
     const json = await response.json();
     console.log("Api Data Received... Bitcoin");
     const bitcoinDays = json;
-    console.log(bitcoinDays);
+    // console.log(bitcoinDays);
     return bitcoinDays;
   } catch (error) {
     console.error("Oops! Something went wrong..", error.message);

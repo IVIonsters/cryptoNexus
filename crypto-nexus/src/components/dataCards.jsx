@@ -2,19 +2,34 @@ import React from "react";
 import { useEffect, useState } from "react";
 import { useCrypto } from "../context/CryptoContext";
 import { getCrypto } from "../services/api";
+import { getMockDataForCrypto } from "../data/mockData";
 import "../App.css";
 
 function DataCards() {
   const { selectedCrypto } = useCrypto();
   const [data, setData] = useState("null");
 
+  // useEffect(() => {
+  //   async function fetchApiData() {
+  //     const result = await getCrypto(selectedCrypto);
+  //     setData(result);
+  //     // console.log(result);
+  //   }
+
+  //   fetchApiData();
+  // }, [selectedCrypto]);
+
   useEffect(() => {
     async function fetchApiData() {
-      const result = await getCrypto(selectedCrypto);
-      setData(result);
-      console.log(result);
+      try {
+        const result = await getCrypto(selectedCrypto);
+        setData(result);
+      } catch (error) {
+        console.error("Failed to fetch API...", error);
+        //set mock data
+        setData(getMockDataForCrypto(selectedCrypto));
+      }
     }
-
     fetchApiData();
   }, [selectedCrypto]);
 
