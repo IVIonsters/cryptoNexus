@@ -18,7 +18,7 @@ export async function getCrypto(cryptoId) {
 }
 
 //Crypto 30 Day Chart
-export async function getCryptoHistory(crytpoId) {
+export async function getCryptoHistory(cryptoId) {
   const corsProxy = "https://cors-anywhere.herokuapp.com/";
   const apiUrl = `https://api.coingecko.com/api/v3/coins/${cryptoId}/market_chart?vs_currency=usd&days=30`;
   const url = corsProxy + apiUrl;
