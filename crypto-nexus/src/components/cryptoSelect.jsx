@@ -36,6 +36,26 @@ function CryptoSelect() {
         >
           Solana
         </button>
+        <button
+          className={`rounded-md px-4 py-2 ${
+            selectedCrypto === "mantle"
+              ? "bg-indigo-600 text-white"
+              : "bg-gray-800 text-gray-300 hover:bg-gray-700"
+          }`}
+          onClick={() => setSelectedCrypto("mantle")}
+        >
+          Mantle
+        </button>{" "}
+        <button
+          className={`rounded-md px-4 py-2 ${
+            selectedCrypto === "tether"
+              ? "bg-indigo-600 text-white"
+              : "bg-gray-800 text-gray-300 hover:bg-gray-700"
+          }`}
+          onClick={() => setSelectedCrypto("tether")}
+        >
+          Tether
+        </button>
       </div>
     </div>
   );

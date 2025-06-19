@@ -9,16 +9,6 @@ function DataCards() {
   const { selectedCrypto } = useCrypto();
   const [data, setData] = useState("null");
 
-  // useEffect(() => {
-  //   async function fetchApiData() {
-  //     const result = await getCrypto(selectedCrypto);
-  //     setData(result);
-  //     // console.log(result);
-  //   }
-
-  //   fetchApiData();
-  // }, [selectedCrypto]);
-
   useEffect(() => {
     async function fetchApiData() {
       try {

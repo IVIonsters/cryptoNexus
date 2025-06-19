@@ -28,7 +28,7 @@ export async function getCryptoHistory(cryptoId) {
       throw new Error(`Response status: ${response.status}`);
     }
     const json = await response.json();
-    console.log("Api Data Received... Bitcoin");
+    console.log(`Api Chart Received...${cryptoId}`);
     const bitcoinDays = json;
     // console.log(bitcoinDays);
     return bitcoinDays;
